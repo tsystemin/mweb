@@ -15,6 +15,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParserException;
@@ -138,9 +139,27 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            String url_new = null;
+            JSONArray shop;
+            JSONObject item;
 
-            TextView tv = (TextView)findViewById(R.id.text);
-            tv.setText(jb.toString());
+            TextView tv = (TextView) findViewById(R.id.text);
+            //tv.setText(jb.toString());
+
+            tv.setText("\n");
+
+            try {
+                shop = jb.getJSONArray("shops");
+                for (int i = 0; i < shop.length(); i++) {
+                    item = shop.getJSONObject(i);
+                    url_new = item.getString("shop_uri");
+                    //Log.d("Type", shop.getString(i););
+                    //tv.setText(url_new);
+                    tv.append(url_new + "\n");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -152,7 +171,8 @@ public class MainActivity extends ActionBarActivity {
         protected Void doInBackground(Void... arg0) {
 
             //String url = "http://192.168.1.145/tst.php";
-            String url = "http://10.0.0.17/opencart/?route=feed/web_api/products&category=27&key=key1";
+            //String url = "http://10.0.0.17/opencart/?route=feed/web_api/products&category=27&key=key1";
+            String url = "http://10.0.0.14/landing/main.php";
             RestService re = new RestService();
             jb =  re.doGet(url);
 
